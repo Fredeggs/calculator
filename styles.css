@@ -1,0 +1,81 @@
+html, body {
+    margin:0px;
+    height:100%;
+  }
+
+#calc-container {
+    margin:0px;
+    height:100%;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+#screen-container {
+    width: 500px; /* Can be in percentage also. */
+    height: auto;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+    background-color: black;
+    height: 100px;
+    border-radius: 15px 15px 0px 0px;
+}
+
+#screen {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 100px; 
+    background-color: green;
+    height: 100px;
+    width: 500px;
+    border-radius: 7px 7px 0px 0px;
+    font-family: 'Kameron', serif;
+    font-size: xx-large;
+}
+
+#buttons {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    background-color: lightgray;
+    padding: 20px;
+    border-color: black;
+    border-width: 20px;
+    border-radius: 0px 0px 15px 15px;
+}
+
+#add {
+    background-color: lightgray;
+}
+
+#sub {
+    background-color: lightgray}
+
+#mult {
+    background-color: lightgray;
+}
+
+#div {
+    background-color: lightgray;
+}
+
+#equals {
+    background-color: lightgray;
+}
+
+#backspace {
+    background-color: orange;
+}
+
+#numpad {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    border-radius: 5px;
+    background-color: lightgray;
+}
+
+#operators {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    border-radius: 5px;
+}

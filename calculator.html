@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<title>Web-Based Calculator</title>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kameron&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id='calc-container'>
+        <div id='screen-container'>
+            <div id='screen'>Number Display</div>
+        </div>
+        <div id='buttons'>
+            <div id='numpad'>
+                <button type="button" id="seven">7</button>
+                <button type="button" id="eight">8</button>
+                <button type="button" id="nine">9</button>
+                <button type="button" id="four">4</button>
+                <button type="button" id="five">5</button>
+                <button type="button" id="six">6</button>
+                <button type="button" id="one">1</button>
+                <button type="button" id="two">2</button>
+                <button type="button" id="three">3</button>
+                <button type="button" id="zero">0</button>
+                <button type="button" id="clear">Clear</button>
+                <button type="button" id="decimal">.</button>
+            </div>
+            <div id='operators'>
+                <button type="button" id="add" >+</button>
+                <button type="button" id="sub">-</button>
+                <button type="button" id="mult">x</button>
+                <button type="button" id="div">/</button>
+                <button type="button" id="equals">=</button>
+                <button type="button" id="backspace">Delete</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const screen = document.querySelector("#screen");
+    const one = document.querySelector("#one");
+    const two = document.querySelector("#two");
+    const three = document.querySelector("#three");
+    const four = document.querySelector("#four");
+    const five = document.querySelector("#five");
+    const six = document.querySelector("#six");
+    const seven = document.querySelector("#seven");
+    const eight = document.querySelector("#eight");
+    const nine = document.querySelector("#nine");
+    const zero = document.querySelector("#zero");
+    const clear = document.querySelector("#clear");
+    const decimal = document.querySelector("#decimal");
+    const operators = document.getElementById('operators').getElementsByTagName('*');
+    const mult = document.querySelector("#mult");
+    mult.disabled = true;
+    const div = document.querySelector("#div");
+    div.disabled = true;
+    const addition = document.querySelector("#add");
+    addition.disabled = true;
+    const sub = document.querySelector("#sub");
+    sub.disabled = true;
+    const equals = document.querySelector("#equals");
+    equals.disabled = true;
+    const backspace = document.querySelector("#backspace");
+    let data = [];
+    let num1arr = [];
+    let theOp = '';
+    let num2arr = [];
+    one.addEventListener('click', () => {
+        enableOps(5);
+        data.push('1');
+        screen.innerHTML= data.join('');
+    });
+    window.addEventListener('keydown', (event) => {
+        if(event.keyCode > 47 && event.keyCode < 58 && !event.shiftKey) {
+            enableOps(5);
+            data.push(event.keyCode - 48);
+            screen.innerHTML= data.join('');
+        } else if((event.keyCode == 56) && event.shiftKey){
+            if (containsOp(data)){
+                num1arr = [data[0]];
+                theOp = '';
+                num2arr = [];
+                data.reduce(calculate);
+                let firstNum = parseFloat(num1arr.join(''));
+                let secondNum = parseFloat(num2arr.join(''));
+                data = [operate(firstNum, theOp, secondNum)];
+                screen.innerHTML= data;
+            }
+            data.push(' X ');
+            screen.innerHTML= data.join('');
+            disableOps(5);
+        } else if((event.keyCode == 187) && event.shiftKey){
+            if (containsOp(data)){
+                num1arr = [data[0]];
+                theOp = '';
+                num2arr = [];
+                data.reduce(calculate);
+                let firstNum = parseFloat(num1arr.join(''));
+                let secondNum = parseFloat(num2arr.join(''));
+                data = [operate(firstNum, theOp, secondNum)];
+                screen.innerHTML= data;
+            }
+            data.push(' + ');
+            screen.innerHTML= data.join('');
+            disableOps(5);
+        } else switch(event.keyCode){
+            case 8:
+                let recntlyDeleted = data.pop();
+                if (recntlyDeleted == ' X ' || recntlyDeleted == ' / ' || recntlyDeleted == ' + ' || recntlyDeleted == ' - '){
+                    enableOps(5);
+                }
+                screen.innerHTML= data.join('');
+                break;
+            case 67:
+                data.splice(0, data.length)
+                screen.innerHTML= 'Number Display';
+                disableOps(5);;
+                break;
+            case 191:
+                if (containsOp(data)){
+                    num1arr = [data[0]];
+                    theOp = '';
+                    num2arr = [];
+                    data.reduce(calculate);
+                    let firstNum = parseFloat(num1arr.join(''));
+                    let secondNum = parseFloat(num2arr.join(''));
+                    data = [operate(firstNum, theOp, secondNum)];
+                    screen.innerHTML= data;
+                }
+                data.push(' / ');
+                screen.innerHTML= data.join('');
+                disableOps(5);;
+                break;
+            case 189:
+                if (containsOp(data)){
+                    num1arr = [data[0]];
+                    theOp = '';
+                    num2arr = [];
+                    data.reduce(calculate);
+                    let firstNum = parseFloat(num1arr.join(''));
+                    let secondNum = parseFloat(num2arr.join(''));
+                    data = [operate(firstNum, theOp, secondNum)];
+                    screen.innerHTML= data;
+                }
+                data.push(' - ');
+                screen.innerHTML= data.join('');
+                disableOps(5);
+                break;
+            case 187:
+            case 13:
+                num1arr = [data[0]];
+                theOp = '';
+                num2arr = [];
+                data.reduce(calculate);
+                let firstNum = parseFloat(num1arr.join(''));
+                let secondNum = parseFloat(num2arr.join(''));
+                data = [operate(firstNum, theOp, secondNum)];
+                screen.innerHTML= data;
+                break;
+            }
+    });
+    two.addEventListener('click', () => {
+        enableOps(5);
+        data.push('2');
+        screen.innerHTML= data.join('');
+    });
+    three.addEventListener('click', () => {
+        enableOps(5);
+        data.push('3');
+        screen.innerHTML= data.join('');
+    });
+    four.addEventListener('click', () => {
+        enableOps(5);
+        data.push('4');
+        screen.innerHTML= data.join('');
+    });
+    five.addEventListener('click', () => {
+        enableOps(5);
+        data.push('5');
+        screen.innerHTML= data.join('');
+    });
+    six.addEventListener('click', () => {
+        enableOps(5);
+        data.push('6');
+        screen.innerHTML= data.join('');
+    });
+    seven.addEventListener('click', () => {
+        enableOps(5);
+        data.push('7');
+        screen.innerHTML= data.join('');
+    });
+    eight.addEventListener('click', () => {
+        enableOps(5);
+        data.push('8');
+        screen.innerHTML= data.join('');
+    });
+    nine.addEventListener('click', () => {
+        enableOps(5);
+        data.push('9');
+        screen.innerHTML= data.join('');
+    });
+    zero.addEventListener('click', () => {
+        enableOps(5);
+        data.push('0');
+        screen.innerHTML= data.join('');
+    });
+    decimal.addEventListener('click', () => {
+        data.push('.');
+        screen.innerHTML= data.join('');
+    });
+    clear.addEventListener('click', () => {
+        data.splice(0, data.length)
+        screen.innerHTML= 'Screen';
+        disableOps(5);
+    });
+    mult.addEventListener('click', () => {
+        if (containsOp(data)){
+            num1arr = [data[0]];
+            theOp = '';
+            num2arr = [];
+            data.reduce(calculate);
+            let firstNum = parseFloat(num1arr.join(''));
+            let secondNum = parseFloat(num2arr.join(''));
+            data = [operate(firstNum, theOp, secondNum)];
+            screen.innerHTML= data;
+        }
+        data.push(' X ');
+        screen.innerHTML= data.join('');
+        disableOps(5);
+    });
+    div.addEventListener('click', () => {
+        if (containsOp(data)){
+            num1arr = [data[0]];
+            theOp = '';
+            num2arr = [];
+            data.reduce(calculate);
+            let firstNum = parseFloat(num1arr.join(''));
+            let secondNum = parseFloat(num2arr.join(''));
+            data = [operate(firstNum, theOp, secondNum)];
+            screen.innerHTML= data;
+        }
+        data.push(' / ');
+        screen.innerHTML= data.join('');
+        disableOps(5);
+    });
+    addition.addEventListener('click', () => {
+        if (containsOp(data)){
+            num1arr = [data[0]];
+            theOp = '';
+            num2arr = [];
+            data.reduce(calculate);
+            let firstNum = parseFloat(num1arr.join(''));
+            let secondNum = parseFloat(num2arr.join(''));
+            data = [operate(firstNum, theOp, secondNum)];
+            screen.innerHTML= data;
+        }
+        data.push(' + ');
+        screen.innerHTML= data.join('');
+        disableOps(5);
+    });
+    sub.addEventListener('click', () => {
+        if (containsOp(data)){
+            num1arr = [data[0]];
+            theOp = '';
+            num2arr = [];
+            data.reduce(calculate);
+            let firstNum = parseFloat(num1arr.join(''));
+            let secondNum = parseFloat(num2arr.join(''));
+            data = [operate(firstNum, theOp, secondNum)];
+            screen.innerHTML= data;
+        }
+        data.push(' - ');
+        screen.innerHTML= data.join('');
+        disableOps(5);
+    });
+    equals.addEventListener('click', () => {
+        num1arr = [data[0]];
+        theOp = '';
+        num2arr = [];
+        data.reduce(calculate);
+        let firstNum = parseFloat(num1arr.join(''));
+        let secondNum = parseFloat(num2arr.join(''));
+        data = [operate(firstNum, theOp, secondNum)];
+        screen.innerHTML= data;
+        
+    });
+    backspace.addEventListener('click', () => {
+        let recntlyDeleted = data.pop();
+        if (recntlyDeleted == ' X ' || recntlyDeleted == ' / ' || recntlyDeleted == ' + ' || recntlyDeleted == ' - '){
+            enableOps(5);
+        }
+        screen.innerHTML= data.join('');
+    });
+
+    function add(num1,num2) {return (num1+num2)};
+    function subtract(num1,num2) {return (num1-num2)};
+    function multiply(num1,num2) {return (num1*num2)};
+    function divide(num1,num2) {return (num1/num2)};
+    function operate(num1,op,num2){
+        switch(op){
+            case '+': return add(num1,num2);
+                break;
+            case '-': return subtract(num1,num2);
+                break;
+            case '*': return multiply(num1,num2);
+                break;
+            case '/': return divide(num1,num2);
+                break;
+        }
+    }
+    function calculate(lastElems, nextElem){
+            if (nextElem != ' X ' && nextElem != ' / ' && nextElem != ' + ' && nextElem != ' - ' && theOp == ''){
+                num1arr.push(nextElem);
+            } else if (nextElem != ' X ' && nextElem != ' / ' && nextElem != ' + ' && nextElem != ' - ' && theOp != ''){
+                num2arr.push(nextElem);
+            }
+            switch (nextElem){
+            case " + ": theOp = '+';
+                break;
+            case " - ": theOp = '-';
+                break;
+            case " X ": theOp = '*';
+                break;
+            case " / ": theOp = '/';
+                break;
+            }
+        }
+    function enableOps(num){
+        for(i = 0; i<num; i++){
+            operators[i].disabled = false;
+            operators[i].style.backgroundColor = "orange";
+        }
+    }
+    function disableOps(num){
+        for(i = 0; i<num; i++){
+            operators[i].disabled = true;
+            operators[i].style.backgroundColor = "lightgray";
+        }
+    }
+    function containsOp(arr){
+        return(arr.includes(' / ') || arr.includes(' X ') || arr.includes(' + ') || arr.includes(' - '))
+    }
+</script>
